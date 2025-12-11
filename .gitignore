@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# macOS
+Thumbs.db
+.DS_Store
+
+# Virtual environments
+manim-ce-env/
+venv/
+.env/
+
+# Manim output
+media/
+
+# Cursor/IDE
+.cursor/
+.vscode/
+.idea/
