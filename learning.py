@@ -1,24 +1,24 @@
 from manim import *
 
 
-class CreateCircle(Scene):
-    def construct(self):
-        circle = Circle()  # create a circle
-        circle.set_fill(PINK, opacity=0.5)  # set the color and transparency
-        self.play(Create(circle))  # show the circle on screen
-        self.wait(1)
+# class CreateCircle(Scene):
+#     def construct(self):
+#         circle = Circle()  # create a circle
+#         circle.set_fill(PINK, opacity=0.5)  # set the color and transparency
+#         self.play(Create(circle))  # show the circle on screen
+#         self.wait(1)
 
-class SquareToCircle(Scene):
-    def construct(self):
-        circle = Circle()  # create a circle
-        circle.set_fill(PINK, opacity=0.5)  # set color and transparency
+# class SquareToCircle(Scene):
+#     def construct(self):
+#         circle = Circle()  # create a circle
+#         circle.set_fill(PINK, opacity=0.5)  # set color and transparency
 
-        square = Square()  # create a square
-        square.rotate(PI/4)  # rotate a certain amount
+#         square = Square()  # create a square
+#         square.rotate(PI/4)  # rotate a certain amount
 
-        self.play(Create(square))  # animate the creation of the square
-        self.play(Transform(square, circle))  # interpolate the square into the circle
-        self.play(FadeOut(square))  # fade out animation
+#         self.play(Create(square))  # animate the creation of the square
+#         self.play(Transform(square, circle))  # interpolate the square into the circle
+#         self.play(FadeOut(square))  # fade out animation
 
 # class StickPerson(Scene):
 #     def construct(self):
@@ -36,7 +36,7 @@ class SquareToCircle(Scene):
 class StickPerson(Scene):
     def construct(self):
         # head
-        head = Circle(color=WHITE, radius=0.65, fill_opacity=0.5)
+        head = Circle(color=WHITE, radius=0.65)
         head.shift(UP * 2)
 
         # body
@@ -52,7 +52,75 @@ class StickPerson(Scene):
         left_arm = Line(body_start+DOWN*0.2, body_start + LEFT * 1+DOWN*1, color=WHITE)
         right_arm = Line(body_start+DOWN*0.2, body_start + RIGHT * 1+DOWN*1, color=WHITE)
 
-        self.play(Create(head), Create(body), Create(left_leg), Create(right_leg), Create(left_arm), Create(right_arm))
+        stick_person = VGroup(head, body, left_leg, right_leg, left_arm, right_arm) #Ordered list of mobjects, animates one after the other
+
+        self.play(Create(stick_person, lag_ratio=0.5)) # can add lag_ratio to control the speed of the animation
+        self.play(head.animate.set_fill(WHITE, opacity=0.5))  # color the circle on screen
         self.wait(1)
+        self.play(stick_person.animate.rotate(PI), run_time=2) #.rotate only interpoloates the start and ending state
+        self.wait(2)
+        self.play(Rotate(stick_person, angle=PI), run_time=2)  #Rotate() actually rotates the object
+
+    def transform(self):
+        a = (head)
+        b = Square()
+        c = Triangle()
+        self.play(Transform(a, b))
+        self.play(Transform(a, c))
+        self.play(FadeOut(a))
 
 
+
+    # def replacement_transform(self):
+    #     a = Circle()
+    #     b = Square()
+    #     c = Triangle()
+    #     self.play(ReplacementTransform(a, b))
+    #     self.play(ReplacementTransform(b, c))
+    #     self.play(FadeOut(c))
+
+    # def construct(self):
+    #     self.transform()
+    #     self.wait(0.5)  # wait for 0.5 seconds
+    #     self.replacement_transform()
+
+
+# class TwoTransforms(Scene):
+#     def transform(self):
+#         a = Circle()
+#         b = Square()
+#         c = Triangle()
+#         self.play(Transform(a, b))
+#         self.play(Transform(a, c))
+#         self.play(FadeOut(a))
+
+#     def replacement_transform(self):
+#         a = Circle()
+#         b = Square()
+#         c = Triangle()
+#         self.play(ReplacementTransform(a, b))
+#         self.play(ReplacementTransform(b, c))
+#         self.play(FadeOut(c))
+
+#     def construct(self):
+#         self.transform()
+#         self.wait(0.5)  # wait for 0.5 seconds
+#         self.replacement_transform()
+
+
+
+
+if __name__ == "__main__":
+    import subprocess
+    import sys
+    from pathlib import Path
+
+    # Default scene to run (change this to run a different scene)
+    scene_name = "StickPerson"
+    
+    # Get the path to this file
+    this_file = Path(__file__).resolve()
+    
+    # Run manim command
+    cmd = ["manim", "-pql", str(this_file), scene_name]
+    subprocess.run(cmd)
