@@ -56,33 +56,23 @@ class StickPerson(Scene):
 
         self.play(Create(stick_person, lag_ratio=0.5)) # can add lag_ratio to control the speed of the animation
         self.play(head.animate.set_fill(WHITE, opacity=0.5))  # color the circle on screen
-        self.wait(1)
-        self.play(stick_person.animate.rotate(PI), run_time=2) #.rotate only interpoloates the start and ending state
-        self.wait(2)
-        self.play(Rotate(stick_person, angle=PI), run_time=2)  #Rotate() actually rotates the object
+        self.play(stick_person.animate.rotate(PI), run_time=1) #.rotate only interpoloates the start and ending state
+        self.wait(0.5)
+        self.play(Rotate(stick_person, angle=PI), run_time=1)  #Rotate() actually rotates the object
+        
+        # Transform head into square, then triangle
+        b = Square(color=WHITE, fill_opacity=0.5,side_length=0.5)
+        # Position square so its bottom aligns with top of body (body_start)
+        b.move_to(body_start + UP * (b.get_height() / 2))
+        c = Triangle(color=WHITE, fill_opacity=0.5, height=0.5)
+        # Position triangle so its bottom aligns with top of body (body_start)
+        c.move_to(body_start + UP * (c.get_height() / 2))        
+        self.play(Transform(head, b))
+        self.play(Transform(head, c))
+        self.play(FadeOut(head))
 
-    def transform(self):
-        a = (head)
-        b = Square()
-        c = Triangle()
-        self.play(Transform(a, b))
-        self.play(Transform(a, c))
-        self.play(FadeOut(a))
 
 
-
-    # def replacement_transform(self):
-    #     a = Circle()
-    #     b = Square()
-    #     c = Triangle()
-    #     self.play(ReplacementTransform(a, b))
-    #     self.play(ReplacementTransform(b, c))
-    #     self.play(FadeOut(c))
-
-    # def construct(self):
-    #     self.transform()
-    #     self.wait(0.5)  # wait for 0.5 seconds
-    #     self.replacement_transform()
 
 
 # class TwoTransforms(Scene):
