@@ -61,10 +61,10 @@ class StickPerson(Scene):
         self.play(Rotate(stick_person, angle=PI), run_time=1)  #Rotate() actually rotates the object
         
         # Transform head into square, then triangle
-        b = Square(color=WHITE, fill_opacity=0.5,side_length=0.5)
+        b = Square(color=WHITE, fill_opacity=0.5)
         # Position square so its bottom aligns with top of body (body_start)
         b.move_to(body_start + UP * (b.get_height() / 2))
-        c = Triangle(color=WHITE, fill_opacity=0.5, height=0.5)
+        c = Triangle(color=WHITE, fill_opacity=0.5)
         # Position triangle so its bottom aligns with top of body (body_start)
         c.move_to(body_start + UP * (c.get_height() / 2))        
         self.play(Transform(head, b))
