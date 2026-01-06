@@ -176,28 +176,7 @@ class RandomWalk(Scene):
         
         self.wait(0.5)
         
-        # Add y=x and y=-x reference lines
-        # Create y=x line (45 degree line)
-        y_equals_x = new_axes.plot(lambda x: x, x_range=[0, min(total_steps, y_range_buffer)], color=YELLOW, stroke_width=2)
-        y_equals_neg_x = new_axes.plot(lambda x: -x, x_range=[0, min(total_steps, y_range_buffer)], color=YELLOW, stroke_width=2)
-        
-        # Add labels for the lines
-        y_x_label = MathTex("y=x", color=YELLOW).scale(0.6)
-        y_x_label.next_to(new_axes.c2p(total_steps * 0.7, total_steps * 0.7 * 0.8), UP)
-        
-        y_neg_x_label = MathTex("y=-x", color=YELLOW).scale(0.6)
-        y_neg_x_label.next_to(new_axes.c2p(total_steps * 0.7, -total_steps * 0.7 * 0.8), DOWN)
-        
-        # Show the reference lines
-        self.play(
-            Create(y_equals_x),
-            Create(y_equals_neg_x),
-            Write(y_x_label),
-            Write(y_neg_x_label),
-            run_time=1.5
-        )
-        
-        self.wait(0.5)
+      
         
         # Create the continuation path (starts from where first walk ended)
         continuation_points = [new_axes.c2p(num_steps, y)]  # Start from end of first walk
@@ -226,8 +205,98 @@ class RandomWalk(Scene):
             rate_func=linear
         )
         
+        self.wait(0.5)
+
+
+        
+        # Adding y=x and y=-x reference lines
+        # Use visible range for x_range
+        max_visible_x = min(total_steps, y_range_buffer)
+        y_equals_x = new_axes.plot(lambda x: x, x_range=[0, max_visible_x], color=YELLOW, stroke_width=2)
+        y_equals_neg_x = new_axes.plot(lambda x: -x, x_range=[0, max_visible_x], color=YELLOW, stroke_width=2)
+        
+        # Add labels for the lines - position at specific coordinates
+        label_x_pos = 40
+        label_y_pos = 17
+        
+        y_x_label = MathTex("y=x", color=YELLOW).scale(0.6)
+        y_x_label.next_to(new_axes.c2p(label_x_pos, label_y_pos), UP)
+        
+        y_neg_x_label = MathTex("y=-x", color=YELLOW).scale(0.6)
+        y_neg_x_label.next_to(new_axes.c2p(label_x_pos, -label_y_pos), DOWN)
+        y_neg_x_label.shift(RIGHT * 0.3)  # Shift right
+        
+        # Show the reference lines - draw graphs first
+        self.play(
+            Create(y_equals_x),
+            Create(y_equals_neg_x),
+            run_time=1.5
+        )
+        # Then write the labels
+        self.play(
+            Write(y_x_label),
+            Write(y_neg_x_label),
+            run_time=1.5
+        )
+        
+        # Adding y=x^0.5 and y=-x^0.5 reference lines
+        y_equals_sqrt_x = new_axes.plot(lambda x: x**0.5, x_range=[0, 500], color=PINK, stroke_width=2)
+        y_equals_neg_sqrt_x = new_axes.plot(lambda x: -(x**0.5), x_range=[0, 500], color=PINK, stroke_width=2)
+        
+        # Add labels for the sqrt lines
+        sqrt_label_x_pos = 200
+        sqrt_label_y_pos = 17
+        
+        y_sqrt_x_label = MathTex("y=x^{0.5}", color=PINK).scale(0.6)
+        y_sqrt_x_label.next_to(new_axes.c2p(sqrt_label_x_pos, sqrt_label_y_pos), UP)
+        
+        y_neg_sqrt_x_label = MathTex("y=-x^{0.5}", color=PINK).scale(0.6)
+        y_neg_sqrt_x_label.next_to(new_axes.c2p(sqrt_label_x_pos, -sqrt_label_y_pos), DOWN)
+        
+        # Show the sqrt reference lines - draw graphs first
+        self.play(
+            Create(y_equals_sqrt_x),
+            Create(y_equals_neg_sqrt_x),
+            run_time=1.5
+        )
+        # Then write the labels
+        self.play(
+            Write(y_sqrt_x_label),
+            Write(y_neg_sqrt_x_label),
+            run_time=1.5
+        )
+        
+        # Shade the area between the pink lines
+        # Create filled area between y=x^0.5 and y=-x^0.5
+        # Generate points along both curves
+        num_points = 100
+        area_points = []
+        
+        # Points along the upper curve (y=x^0.5) from right to left
+        for i in range(num_points, -1, -1):
+            x = 500 * (i / num_points)
+            y = x**0.5
+            area_points.append(new_axes.c2p(x, y))
+        
+        # Points along the lower curve (y=-x^0.5) from left to right
+        for i in range(num_points + 1):
+            x = 500 * (i / num_points)
+            y = -(x**0.5)
+            area_points.append(new_axes.c2p(x, y))
+        
+        # Close the polygon
+        area_points.append(area_points[0])
+        
+        # Create filled polygon
+        filled_area = Polygon(*area_points, fill_opacity=0.3, fill_color=PINK, stroke_width=0)
+        
+        # Animate the shading
+        self.play(FadeIn(filled_area), run_time=1.5)
+
         # Final pause
         self.wait(2)
+
+
 
 
 if __name__ == "__main__":
